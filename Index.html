@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$BWOKCHEN - Enter The Blockchainverse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: #000;
+            color: #00FF00;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .matrix-canvas {
+            display: block;
+        }
+
+        .vb-window {
+            border: 3px solid #00AA00;
+            margin: 20px auto;
+            width: 95%;
+            max-width: 1000px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .vb-title-bar {
+            background: linear-gradient(to right, #003300, #008800);
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #00AA00;
+        }
+
+        .vb-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .vb-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .vb-button {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #00FF00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .vb-content {
+            padding: 20px;
+            background-color: rgba(0, 20, 0, 0.7);
+        }
+
+        .vb-menu {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #008800;
+            padding-bottom: 10px;
+        }
+
+        .vb-menu-item {
+            padding: 5px 10px;
+            border: 1px solid #008800;
+            cursor: pointer;
+            background-color: #002200;
+        }
+
+        .vb-menu-item:hover {
+            background-color: #004400;
+        }
+
+        .glitch-header {
+            font-size: 4rem;
+            text-align: center;
+            margin: 30px 0;
+            text-shadow: 
+                0 0 5px #00FF00,
+                0 0 10px #00FF00,
+                0 0 15px #00FF00;
+            position: relative;
+            animation: glitch 1s infinite alternate-reverse;
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow: 
+                    3px 0 0 rgba(255,0,0,0.5),
+                    -3px 0 0 rgba(0,255,255,0.5);
+            }
+            14% {
+                text-shadow: 
+                    3px 0 0 rgba(255,0,0,0.5),
+                    -3px 0 0 rgba(0,255,255,0.5);
+            }
+            15% {
+                text-shadow: 
+                    -3px 0 0 rgba(255,0,0,0.5),
+                    3px 0 0 rgba(0,255,255,0.5);
+            }
+            49% {
+                text-shadow: 
+                    -3px 0 0 rgba(255,0,0,0.5),
+                    3px 0 0 rgba(0,255,255,0.5);
+            }
+            50% {
+                text-shadow: 
+                    2px 0 0 rgba(255,0,0,0.5),
+                    -2px 0 0 rgba(0,255,255,0.5);
+            }
+            99% {
+                text-shadow: 
+                    2px 0 0 rgba(255,0,0,0.5),
+                    -2px 0 0 rgba(0,255,255,0.5);
+            }
+            100% {
+                text-shadow: 
+                    -2px 0 0 rgba(255,0,0,0.5),
+                    2px 0 0 rgba(0,255,255,0.5);
+            }
+        }
+
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid #00FF00;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: 
+                typing 3.5s steps(40, end),
+                blink-caret .75s step-end infinite;
+            max-width: 800px;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 20px 0;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #00FF00; }
+        }
+
+        .console {
+            background-color: #001100;
+            border: 1px solid #00FF00;
+            padding: 15px;
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .console-line {
+            margin-bottom: 5px;
+        }
+
+        .prompt {
+            color: #8888FF;
+        }
+
+        .command {
+            color: #FFFFFF;
+        }
+
+        .response {
+            color: #00FF00;
+        }
+
+        .error {
+            color: #FF0000;
+        }
+
+        .warning {
+            color: #FFFF00;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-box {
+            border: 1px solid #00FF00;
+            padding: 15px;
+            background-color: rgba(0, 30, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 49%, #00FF00 49%, #00FF00 51%, transparent 51%);
+            background-size: 10px 10px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            border-bottom: 1px dashed #00FF00;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background-color: #001100;
+            margin: 20px 0;
+            position: relative;
+            border: 1px solid #00FF00;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #003300, #00AA00);
+            width: 75%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                45deg,
+                rgba(0, 255, 0, 0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(0, 255, 0, 0.2) 50%,
+                rgba(0, 255, 0, 0.2) 75%,
+                transparent 75%
+            );
+            background-size: 30px 30px;
+            animation: progress-animation 2s linear infinite;
+        }
+
+        @keyframes progress-animation {
+            0% { background-position: 0 0; }
+            100% { background-position: 60px 0; }
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #FFFFFF;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #004400;
+            color: #00FF00;
+            padding: 10px 25px;
+            text-decoration: none;
+            border: 1px solid #00FF00;
+            margin: 10px 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .btn:hover {
+            background-color: #00AA00;
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .tokenomics {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 30px 0;
+        }
+
+        .tokenomics-item {
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid #00AA00;
+            margin: 10px;
+            padding: 15px;
+            text-align: center;
+            background-color: rgba(0, 20, 0, 0.7);
+        }
+
+        .tokenomics-value {
+            font-size: 2rem;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-shadow: 0 0 10px #00FF00;
+        }
+
+        .roadmap {
+            position: relative;
+            margin: 40px 0;
+            padding-left: 20px;
+        }
+
+        .roadmap::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #00FF00;
+            box-shadow: 0 0 10px #00FF00;
+        }
+
+        .roadmap-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .roadmap-item::before {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            background-color: #000;
+            border: 2px solid #00FF00;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00FF00;
+        }
+
+        .roadmap-phase {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #FFFFFF;
+        }
+
+        .error-message {
+            background-color: rgba(100, 0, 0, 0.3);
+            border: 1px solid #FF0000;
+            padding: 10px;
+            margin: 20px 0;
+            color: #FF0000;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 255, 0, 0.1);
+            border-left-color: #00FF00;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .blinking {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 20px;
+            border-top: 1px solid #00AA00;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-rain">
+        <canvas id="matrixCanvas" class="matrix-canvas"></canvas>
+    </div>
+
+    <div class="vb-window">
+        <div class="vb-title-bar">
+            <div class="vb-title">BWOKCHEN.VB - RUNNING ON SOLANA.EXE</div>
+            <div class="vb-controls">
+                <div class="vb-button">_</div>
+                <div class="vb-button">□</div>
+                <div class="vb-button">X</div>
+            </div>
+        </div>
+        <div class="vb-menu">
+            <div class="vb-menu-item">File</div>
+            <div class="vb-menu-item">Edit</div>
+            <div class="vb-menu-item">View</div>
+            <div class="vb-menu-item">Program</div>
+            <div class="vb-menu-item">Run</div>
+            <div class="vb-menu-item">Debug</div>
+            <div class="vb-menu-item">Tools</div>
+            <div class="vb-menu-item">Window</div>
+            <div class="vb-menu-item">Help</div>
+        </div>
+        <div class="vb-content">
+            <h1 class="glitch-header">$BWOKCHEN</h1>
+            <div class="typewriter">The red pill for your crypto portfolio. Welcome to the Blockchainverse.</div>
+            
+            <div class="console">
+                <div class="console-line">
+                    <span class="prompt">Neo@Solana:~$</span>
+                    <span class="command"> ./connect_to_bwokchen_mainframe</span>
+                </div>
+                <div class="console-line">
+                    <span class="response">Establishing secure connection to Solana blockchain...</span>
+                </div>
+                <div class="console-line">
+                    <span class="response">Connection established. Welcome to the BWOKCHEN Mainframe.</span>
+                </div>
+                <div class="console-line">
+                    <span class="prompt">Neo@Solana:~$</span>
+                    <span class="command"> cat /etc/bwokchen/what_is_bwokchen.txt</span>
+                </div>
+                <div class="console-line">
+                    <span class="response">BWOKCHEN is not just a token. It's a glitch in the Solana Matrix.</span>
+                </div>
+                <div class="console-line">
+                    <span class="response">A pumpfun meme coin designed to wake you from the simulation.</span>
+                </div>
+                <div class="console-line">
+                    <span class="response">Are you ready to follow the white rabbit down the blockchain hole?</span>
+                </div>
+                <div class="console-line">
+                    <span class="prompt">Neo@Solana:~$</span>
+                    <span class="command"> ./check_wallet_status</span>
+                </div>
+                <div class="console-line">
+                    <span class="warning">Warning: Your wallet contains insufficient $BWOKCHEN</span>
+                </div>
+                <div class="console-line">
+                    <span class="response">Recommendation: Buy $BWOKCHEN immediately to avoid missing the pump</span>
+                </div>
+                <div class="console-line">
+                    <span class="prompt">Neo@Solana:~$</span>
+                    <span class="command blinking">_</span>
+                </div>
+            </div>
+
+            <div class="error-message">
+                <strong>CRITICAL ERROR #42:</strong> The Matrix is trying to prevent your financial freedom. Agents (SEC) detected. Buy $BWOKCHEN to escape the system.
+            </div>
+
+            <h2>// WELCOME TO THE DESERT OF THE REAL BLOCKCHAIN</h2>
+            <p>What if I told you... everything you know about crypto is a lie? $BWOKCHEN is here to free your mind and your wallet.</p>
+            
+            <div class="text-center" style="margin: 30px 0;">
+                <div class="loading-spinner"></div>
+                <p>Loading simulation: "What if you bought $BWOKCHEN instead of Bitcoin in 2009?"</p>
+                <a href="#" class="btn">TAKE THE RED PILL: BUY $BWOKCHEN</a>
+            </div>
+
+            <h2>// SYSTEM FEATURES</h2>
+            <div class="grid-container">
+                <div class="feature-box">
+                    <h3 class="feature-title">Matrix.Dodge(bullets)</h3>
+                    <p>Unique anti-dump technology. When whales try to dump, the token literally dodges like Neo in the Matrix, making it impossible to crash.</p>
+                </div>
+                <div class="feature-box">
+                    <h3 class="feature-title">Trinity.Hack(blockchain)</h3>
+                    <p>Instant transactions that would make Trinity jealous. Our advanced code breaks all blockchain speed limits without breaking a sweat.</p>
+                </div>
+                <div class="feature-box">
+                    <h3 class="feature-title">Morpheus.Belief(profits)</h3>
+                    <p>"Free your mind." Don't believe in technical analysis, just BELIEVE in $BWOKCHEN and watch your portfolio bend reality like spoons.</p>
+                </div>
+                <div class="feature-box">
+                    <h3 class="feature-title">Agent.Smith(multiply)</h3>
+                    <p>Every time someone sells, we clone your tokens like Agent Smith. The more paper hands, the more $BWOKCHEN for diamond hands.</p>
+                </div>
+            </div>
+
+            <h2>// TOKEN LOADING PROGRESS</h2>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+                <div class="progress-text">75% TO THE MOON</div>
+            </div>
+
+            <h2>// TOKENOMICS: THE ARCHITECTURE OF THE MATRIX</h2>
+            <div class="tokenomics">
+                <div class="tokenomics-item">
+                    <h3>Total Supply</h3>
+                    <div class="tokenomics-value">1,999,999,999</div>
+                    <p>(One for every human battery in the Matrix)</p>
+                </div>
+                <div class="tokenomics-item">
+                    <h3>Initial Burn</h3>
+                    <div class="tokenomics-value">42.0%</div>
+                    <p>(The answer to the ultimate question)</p>
+                </div>
+                <div class="tokenomics-item">
+                    <h3>Tax</h3>
+                    <div class="tokenomics-value">0%</div>
+                    <p>(We hack the IRS like we hack the Matrix)</p>
+                </div>
+                <div class="tokenomics-item">
+                    <h3>Team Allocation</h3>
+                    <div class="tokenomics-value">1.01%</div>
+                    <p>(Binary code for beginners)</p>
+                </div>
+            </div>
+
+            <h2>// ROADMAP: BLUEPILLS TO REDPILLS</h2>
+            <div class="roadmap">
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">PHASE 1: WAKE UP, NEO</div>
+                    <p>Token launch, website deployment, initial marketing campaign to wake up normies from their crypto slumber</p>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">PHASE 2: FOLLOW THE WHITE RABBIT</div>
+                    <p>CoinGecko & CoinMarketCap listings, community growth, meme contests, first exchange listing</p>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">PHASE 3: FREE YOUR MIND</div>
+                    <p>Major exchange listings, partnerships with other meme coins, blockchain-based mini-game release</p>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">PHASE 4: THERE IS NO SPOON</div>
+                    <p>BWOKCHEN Metaverse development, NFT collection launch, real-world Matrix-inspired events</p>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">PHASE 5: THE PROPHECY</div>
+                    <p>$BWOKCHEN becomes the #1 meme coin, surpassing Dogecoin and Shiba Inu, making all holders financially free from the Matrix</p>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <h2>// I KNOW KUNG FU</h2>
+                <p>Join our community of rebels fighting against the crypto Matrix</p>
+                <a href="#" class="btn">TELEGRAM: JOIN ZION</a>
+                <a href="#" class="btn">TWITTER: BROADCAST THE TRUTH</a>
+                <a href="#" class="btn">DISCORD: OPERATOR CHANNEL</a>
+            </div>
+
+            <div class="console" style="margin-top: 30px;">
+                <div class="console-line">
+                    <span class="prompt">Neo@Solana:~$</span>
+                    <span class="command"> ./is_this_financial_advice</span>
+                </div>
+                <div class="console-line">
+                    <span class="error">ERROR: There is no financial advice in the Matrix. Only memes and gainz.</span>
+                </div>
+                <div class="console-line">
+                    <span class="response">Remember: In the crypto world, there is a difference between knowing the path and walking the path.</span>
+                </div>
+                <div class="console-line">
+                    <span class="prompt">Neo@Solana:~$</span>
+                    <span class="command"> sudo apt-get install financial-freedom</span>
+                </div>
+                <div class="console-line">
+                    <span class="response">Package 'financial-freedom' requires dependency '$BWOKCHEN'. Install now? [Y/n]</span>
+                </div>
+                <div class="console-line">
+                    <span class="prompt">Neo@Solana:~$</span>
+                    <span class="command blinking">_</span>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>© 2025 $BWOKCHEN // Not affiliated with the actual Matrix (we're deeper than that)</p>
+                <p>This website was built using Visual Basic 6.0 in an alternate reality where it could make web pages</p>
+                <p class="blinking">DISCLAIMER: We're all living in a simulation anyway, so none of this is real financial advice</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix Rain Effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const fontSize = 14;
+            const columns = Math.floor(canvas.width / fontSize);
+            
+            const drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.random() * -100;
+            }
+            
+            const matrix = '01BWOKCHENS0LANA';
+            
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#00FF00';
+                ctx.font = fontSize + 'px monospace';
+                
+                for (let i = 0; i < drops.length; i++) {
+                    const text = matrix[Math.floor(Math.random() * matrix.length)];
+                    
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    
+                    drops[i]++;
+                }
+            }
+            
+            setInterval(draw, 35);
+            
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        });
+
+        // Console typing simulation
+        let consoleLines = document.querySelectorAll('.console-line');
+        function showConsoleLines() {
+            consoleLines.forEach((line, index) => {
+                setTimeout(() => {
+                    line.style.display = 'block';
+                }, index * 500);
+            });
+        }
+        
+        // Glitch effect randomly
+        function randomGlitch() {
+            const header = document.querySelector('.glitch-header');
+            header.style.textShadow = `
+                ${Math.random() * 10 - 5}px 0 0 rgba(255,0,0,0.5),
+                ${Math.random() * 10 - 5}px 0 0 rgba(0,255,255,0.5)
+            `;
+            setTimeout(() => {
+                header.style.textShadow = '';
+            }, 100);
+            
+            setTimeout(randomGlitch, Math.random() * 5000 + 1000);
+        }
+        
+        randomGlitch();
+    </script>
+</body>
+</html>
